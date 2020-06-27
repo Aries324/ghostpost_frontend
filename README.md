@@ -1,5 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+This is the frontend app for GhostPost.  To run this project both the frontend and backend will need to be ran concurrently.
+
+The backend repo can be found here: https://github.com/Aries324/ghostpost_backend
+
 ## Available Scripts
 
 In the project directory, you can run:
