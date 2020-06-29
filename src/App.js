@@ -1,15 +1,14 @@
-import React from 'react';
-import './App.css';
-import 'semantic-ui-css/semantic.min.css'
+import React from "react";
+import "semantic-ui-css/semantic.min.css";
+import CustomForm from '../src/components/Form'
 
-
-
+const url = "http://localhost:8000/api/";
 // Front End:
 
-// Homepage that displays boasts and roasts
-// buttons to filter the content by either boasts or roasts
+// Homepage that displays boasts and roasts - done
+// buttons to filter the content by either boasts or roasts - done
 // upvote and downvote buttons for each boast and roast
-// ability to sort content based on number of votes
+// ability to sort content based on number of votes- buttons are there but it doesn't work yet
 // page to submit a boast or a roast
 // Note: Try to make your React app as simple as possible. We don't need `react-redux` or `react-router` to accomplish our task. Once you get the basic functionality, feel free to extend it if you so desire. The focus of this assessment is not the frontend. We just need one to display the data.
 class App extends React.Component {
@@ -17,11 +16,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       posts: [],
-      display: [],
     };
   }
   componentDidMount() {
-    fetch("http://localhost:8000/api/post_review/")
+    fetch(url + "post_review/")
       .then((res) => res.json())
       .then((data) =>
         this.setState({
@@ -29,50 +27,84 @@ class App extends React.Component {
         })
       );
   }
-  handleRoasts = (event) => {
-    const getRoast = this.state.posts.filter(
-      (roast) => roast.is_boast === false
-    );
-    this.setState({ display: getRoast });
+  getRoasts = (event) => {
+    fetch(url + "roasts")
+      .then((res) => res.json())
+      .then((data) =>
+        this.setState({
+          posts: data,
+        })
+      );
   };
 
-  handleBoasts = (event) => {
-    const getBoast = this.state.posts.filter(
-      (boast) => boast.is_boast === true
-    );
-    this.setState({ display: getBoast });
+  getBoasts = (event) => {
+    fetch(url + "boasts")
+      .then((res) => res.json())
+      .then((data) =>
+        this.setState({
+          posts: data,
+        })
+      );
   };
 
   handleSortVotes = (event) => {
-    const votes = this.state.display.sort(function (up, down) {
+    const votes = [...this.state.posts];
+    votes.sort(function (up, down) {
       return up.up_votes - down.down_votes;
     });
-    this.setState({ display: votes });
+    this.setState({ posts: votes });
   };
+
+  postUpVotes = (event) => {
+    fetch(url + "post_review/" + event + "/up_vote/")
+      .then((res) => res.json())
+      .then((data) =>
+        console.log(data)
+        
+      );
+  };
+  postDownVotes = (event) => {
+    fetch(url + "post_review/" + event + "/down_votes/")
+      .then((res) => res.json())
+      .then((data) =>
+        console.log(data)
+        
+      );
+  };
+  
+
+
   render() {
     return (
       <div>
-        <button onClick={this.handleSortVotes}>Sort By Votes</button>
-        <h1>Ghost Post</h1>
-        
-          {this.state.posts.map((post) => {
-            return (
-              <div style={{ padding: 10 }}>
-                <button onClick={this.handleBoasts}>Boast</button>
-                <button onClick={this.handleRoasts}>Roasts</button>
+        <button onClick={this.handleSortVotes} style={{ margin: 10 }}>
+          Sort By Votes
+        </button>
+        <button onClick={this.getBoasts} style={{ margin: 10 }}>
+          Boast
+        </button>
+        <button onClick={this.getRoasts} style={{ margin: 10 }}>
+          Roasts
+        </button>
+        <CustomForm />
 
-                <p>Post: {this.content}</p>
-                <button onClick={this.up_votes}>UpVotes</button>
-                <button onClick={this.down_votes}>DownVotes</button>
-                <p>Timestamp: {post.time}</p>
-              </div>
-            );
-          })}
-       
+        <h1>Ghost Post</h1>
+
+        {this.state.posts.map((post) => {
+          return (
+            <div style={{ padding: 10 }}>
+              <p>{post.id}</p>
+              <p>Post: {post.content}</p>
+              <button onClick={() => this.postUpVotes(post.id)}>UpVotes: {post.up_votes}</button>
+              <p>Total: {post.total_votes}</p>
+              <button onClick={() => this.postDownVotes(post.id)}>DownVotes: {post.down_votes}</button>
+              <p>Timestamp: {post.time}</p>
+            </div>
+          );
+        })}
       </div>
     );
   }
 }
-
 
 export default App;
