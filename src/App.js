@@ -93,11 +93,11 @@ class App extends React.Component {
         {this.state.posts.map((post) => {
           return (
             <div style={{ padding: 10 }}>
-              <p>{post.id}</p>
+              <p>Post ID: {post.id}</p>
               <p>Post: {post.content}</p>
               <button onClick={() => this.postUpVotes(post.id)}>UpVotes: {post.up_votes}</button>
-              <p>Total: {post.total_votes}</p>
               <button onClick={() => this.postDownVotes(post.id)}>DownVotes: {post.down_votes}</button>
+              <p>Total: {post.total_votes}</p>
               <p>Timestamp: {post.time}</p>
             </div>
           );

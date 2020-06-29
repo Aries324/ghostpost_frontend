@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Container, Icon, Loader } from "semantic-ui-react";
+import { Button, Container, Icon, Loader, Checkbox } from "semantic-ui-react";
 import Axios from "axios";
 
 const url = "http://localhost:8000/api/";
@@ -9,7 +9,7 @@ class CustomForm extends Component {
         super()
         this.state = {
             content: "",
-            is_boast: true
+            is_boast: false
         };
     }
 
@@ -40,6 +40,11 @@ class CustomForm extends Component {
         ).then(res => console.log(res))
             .catch(error => console.log(error))
     };
+    
+    handleCheckboxChange = (event) =>
+        this.setState({is_boast:event.target.is_boast})
+
+
   render() {
    
     const { loading, error } = this.props;
@@ -55,22 +60,11 @@ class CustomForm extends Component {
               onChange={this.handleChangeMessage}
               value={this.state.content}
             />
-            
-              <Button.Group
-                style={{ border: "none", padding: "0 20px", color: "white" }}
-                basic
-                //   floated="right"
-              >
-                <Button icon style={{ border: "none", padding: "0 20px" }}>
-                            <Icon name="thumbs up" />
-                            Boast
-                </Button>
-                <Button icon style={{ border: "none", padding: "0 20px" }}>
-                            <Icon name="thumbs down" />
-                            Roast
-                </Button>
-              </Button.Group>
-            
+            <span>Check to Boast  </span>
+            <Checkbox
+              is_boast={this.state.is_boast}
+              onChange={this.handleCheckboxChange}
+            />
           </div>
 
           <Button
